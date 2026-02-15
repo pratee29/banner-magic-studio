@@ -1,20 +1,35 @@
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect } from "react";
 import AvatarRow from "./AvatarRow";
 
+const textReveal = {
+  hidden: { opacity: 0, y: 60, filter: "blur(10px)" },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.9,
+      delay: 0.4 + i * 0.18,
+      ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
+    },
+  }),
+};
+
 const HeroBanner = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
   useEffect(() => {
     const handleMouse = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 12,
-        y: (e.clientY / window.innerHeight - 0.5) * 8,
-      });
+      mouseX.set((e.clientX / window.innerWidth - 0.5) * 15);
+      mouseY.set((e.clientY / window.innerHeight - 0.5) * 10);
     };
     window.addEventListener("mousemove", handleMouse);
     return () => window.removeEventListener("mousemove", handleMouse);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-background">
@@ -38,55 +53,58 @@ const HeroBanner = () => {
         </div>
       </nav>
 
-      {/* === THREE LAYER BANNER === */}
+      {/* THREE LAYER BANNER */}
       <div className="relative" style={{ minHeight: "calc(100vh - 72px)" }}>
 
-        {/* LAYER 1 – TOP CURVED IMAGE STRIP */}
+        {/* LAYER 1 – TOP */}
         <motion.div
-          className="layer-strip layer-strip-top relative z-10"
-          style={{
-            transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)`,
-          }}
-          initial={{ opacity: 0, y: -60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          className="layer-strip relative z-10"
+          style={{ x: springX, y: springY }}
         >
-          <div className="curve-top">
-            <AvatarRow direction="left" speed={45} offset={0} cardSize={{ width: "150px", height: "180px" }} />
-          </div>
-          {/* Edge blur masks */}
+          <motion.div
+            className="curve-top"
+            initial={{ opacity: 0, y: -80, rotateX: 25 }}
+            animate={{ opacity: 1, y: 0, rotateX: 6 }}
+            transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <AvatarRow direction="left" speed={60} offset={0} cardSize={{ width: "155px", height: "185px" }} rowIndex={0} />
+          </motion.div>
           <div className="edge-blur-left" />
           <div className="edge-blur-right" />
         </motion.div>
 
-        {/* LAYER 2 – MIDDLE ROW (flanking center) */}
+        {/* LAYER 2 – MIDDLE */}
         <motion.div
-          className="layer-strip layer-strip-mid relative z-10 my-2"
+          className="layer-strip relative z-10 my-3"
           style={{
-            transform: `translate(${mousePos.x * 0.15}px, ${mousePos.y * 0.15}px)`,
+            x: useSpring(mouseX, { stiffness: 30, damping: 25 }),
+            y: useSpring(mouseY, { stiffness: 30, damping: 25 }),
           }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
         >
-          <AvatarRow direction="right" speed={50} offset={-1} cardSize={{ width: "150px", height: "180px" }} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <AvatarRow direction="right" speed={65} offset={-1} cardSize={{ width: "155px", height: "185px" }} rowIndex={1} />
+          </motion.div>
           <div className="edge-blur-left" />
           <div className="edge-blur-right" />
         </motion.div>
 
-        {/* LAYER 3 – BOTTOM CURVED IMAGE STRIP */}
+        {/* LAYER 3 – BOTTOM */}
         <motion.div
-          className="layer-strip layer-strip-bottom relative z-10"
-          style={{
-            transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)`,
-          }}
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+          className="layer-strip relative z-10"
+          style={{ x: springX, y: springY }}
         >
-          <div className="curve-bottom">
-            <AvatarRow direction="left" speed={42} offset={-2} cardSize={{ width: "150px", height: "180px" }} />
-          </div>
+          <motion.div
+            className="curve-bottom"
+            initial={{ opacity: 0, y: 80, rotateX: -25 }}
+            animate={{ opacity: 1, y: 0, rotateX: -6 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <AvatarRow direction="left" speed={55} offset={-2} cardSize={{ width: "155px", height: "185px" }} rowIndex={2} />
+          </motion.div>
           <div className="edge-blur-left" />
           <div className="edge-blur-right" />
         </motion.div>
@@ -94,30 +112,36 @@ const HeroBanner = () => {
         {/* CENTER GRADIENT OVERLAY */}
         <div className="absolute inset-0 z-20 pointer-events-none center-gradient-overlay" />
 
-        {/* Radial glow behind text */}
-        <div
+        {/* Radial purple-orange glow */}
+        <motion.div
           className="absolute inset-0 z-20 pointer-events-none"
+          animate={{
+            opacity: [0.7, 1, 0.7],
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           style={{
             background:
-              "radial-gradient(ellipse 50% 45% at 50% 50%, hsla(280, 60%, 30%, 0.5) 0%, hsla(36, 80%, 50%, 0.12) 40%, transparent 70%)",
+              "radial-gradient(ellipse 45% 40% at 50% 50%, hsla(280, 60%, 25%, 0.5) 0%, hsla(36, 80%, 50%, 0.1) 45%, transparent 70%)",
           }}
         />
 
         {/* TEXT OVERLAY */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
           <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-1 font-display drop-shadow-lg"
+            custom={0}
+            variants={textReveal}
+            initial="hidden"
+            animate="visible"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-1 font-display drop-shadow-[0_0_30px_hsla(36,90%,55%,0.15)]"
           >
             Welcome to Your
           </motion.h1>
 
           <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            custom={1}
+            variants={textReveal}
+            initial="hidden"
+            animate="visible"
             className="text-4xl md:text-6xl lg:text-7xl font-bold italic gold-text mb-3 font-display"
           >
             Online Space{" "}
@@ -125,18 +149,20 @@ const HeroBanner = () => {
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
+            custom={2}
+            variants={textReveal}
+            initial="hidden"
+            animate="visible"
             className="text-base md:text-lg text-muted-foreground italic tracking-[0.3em] mb-10 font-display"
           >
             Observe &nbsp; Learn &nbsp; Discuss &nbsp; Support &nbsp; Pause
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
+            custom={3}
+            variants={textReveal}
+            initial="hidden"
+            animate="visible"
             className="flex flex-col sm:flex-row gap-4 pointer-events-auto"
           >
             <button className="hero-btn-primary">
