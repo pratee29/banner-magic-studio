@@ -8,34 +8,24 @@
   :root {
     --background: 225 35% 8%;
     --foreground: 40 60% 90%;
-
     --card: 225 30% 12%;
     --card-foreground: 40 60% 90%;
-
     --popover: 225 30% 12%;
     --popover-foreground: 40 60% 90%;
-
     --primary: 36 90% 55%;
     --primary-foreground: 225 35% 8%;
-
     --secondary: 225 25% 18%;
     --secondary-foreground: 40 60% 90%;
-
     --muted: 225 20% 15%;
     --muted-foreground: 225 15% 55%;
-
     --accent: 36 80% 50%;
     --accent-foreground: 225 35% 8%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 36 40% 25%;
     --input: 225 25% 18%;
     --ring: 36 90% 55%;
-
     --radius: 0.75rem;
-
     --sidebar-background: 225 30% 10%;
     --sidebar-foreground: 40 60% 90%;
     --sidebar-primary: 36 90% 55%;
@@ -44,14 +34,12 @@
     --sidebar-accent-foreground: 40 60% 90%;
     --sidebar-border: 36 40% 25%;
     --sidebar-ring: 36 90% 55%;
-
     --font-display: 'Playfair Display', serif;
     --font-body: 'Poppins', sans-serif;
-
     --gold-gradient: linear-gradient(135deg, hsl(36, 90%, 55%), hsl(45, 100%, 70%), hsl(36, 90%, 55%));
     --dark-overlay: linear-gradient(180deg, hsla(225, 35%, 8%, 0.3) 0%, hsla(225, 35%, 8%, 0.85) 50%, hsla(225, 35%, 8%, 0.95) 100%);
-    --card-glow: 0 0 20px hsla(36, 90%, 55%, 0.3), 0 0 40px hsla(36, 90%, 55%, 0.1);
-    --card-border-gold: 1px solid hsla(36, 90%, 55%, 0.3);
+    --card-glow: 0 0 25px hsla(36, 90%, 55%, 0.4), 0 0 50px hsla(36, 90%, 55%, 0.15);
+    --card-border-gold: 1px solid hsla(36, 90%, 55%, 0.35);
   }
 
   .dark {
@@ -64,239 +52,244 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
   }
-
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
   }
 }
 
-/* ============================================
-   SCROLLING ANIMATIONS
-   ============================================ */
+/* ============ SCROLLING ============ */
 @keyframes scroll-left {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-
 @keyframes scroll-right {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+.animate-scroll-left {
+  animation: scroll-left var(--speed, 50s) linear infinite;
+}
+.animate-scroll-right {
+  animation: scroll-right var(--speed, 50s) linear infinite;
 }
 
+/* ============ SPARKLE ============ */
 @keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.3) rotate(15deg); }
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  25% { opacity: 0.6; transform: scale(1.2) rotate(10deg); }
+  50% { opacity: 0.4; transform: scale(1.4) rotate(-5deg); }
+  75% { opacity: 0.7; transform: scale(1.1) rotate(8deg); }
+}
+.animate-sparkle {
+  animation: sparkle 2.5s ease-in-out infinite;
 }
 
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 12px hsla(36, 90%, 55%, 0.15), inset 0 0 12px hsla(36, 90%, 55%, 0.03); }
-  50% { box-shadow: 0 0 22px hsla(36, 90%, 55%, 0.35), inset 0 0 22px hsla(36, 90%, 55%, 0.08); }
+/* ============ CARD GLOW BREATHE ============ */
+@keyframes card-breathe {
+  0%, 100% {
+    box-shadow: 0 0 10px hsla(36, 90%, 55%, 0.1), 0 8px 30px hsla(225, 35%, 5%, 0.4);
+    border-color: hsla(36, 90%, 55%, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px hsla(36, 90%, 55%, 0.3), 0 8px 30px hsla(225, 35%, 5%, 0.4);
+    border-color: hsla(36, 90%, 55%, 0.45);
+  }
 }
 
-@keyframes btn-glow {
-  0%, 100% { box-shadow: 0 4px 20px hsla(36, 90%, 55%, 0.3), 0 0 0 0 hsla(36, 90%, 55%, 0); }
-  50% { box-shadow: 0 4px 30px hsla(36, 90%, 55%, 0.5), 0 0 15px 2px hsla(36, 90%, 55%, 0.15); }
-}
-
+/* ============ GOLD SHINE ============ */
 @keyframes gold-shine {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 
-.animate-scroll-left {
-  animation: scroll-left 30s linear infinite;
+/* ============ BUTTON GLOW ============ */
+@keyframes btn-glow {
+  0%, 100% { box-shadow: 0 4px 20px hsla(36, 90%, 55%, 0.25); }
+  50% { box-shadow: 0 4px 35px hsla(36, 90%, 55%, 0.5), 0 0 20px hsla(36, 90%, 55%, 0.15); }
 }
 
-.animate-scroll-right {
-  animation: scroll-right 30s linear infinite;
+/* ============ CARD SHINE SWEEP ============ */
+@keyframes shine-sweep {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  100% { transform: translateX(300%) rotate(25deg); }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-sparkle {
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-
-/* ============================================
-   3D PERSPECTIVE & CURVE
-   ============================================ */
-
+/* ============ LAYER STRIPS ============ */
 .layer-strip {
   position: relative;
-  transition: transform 0.15s ease-out;
 }
 
 .curve-top {
-  transform: perspective(800px) rotateX(6deg) scale(1.02);
+  transform: perspective(900px) rotateX(8deg) scale(1.02);
   transform-origin: center bottom;
   transform-style: preserve-3d;
 }
 
 .curve-bottom {
-  transform: perspective(800px) rotateX(-6deg) scale(1.02);
+  transform: perspective(900px) rotateX(-8deg) scale(1.02);
   transform-origin: center top;
   transform-style: preserve-3d;
 }
 
-/* Edge blur masks */
+/* Edge blur */
 .edge-blur-left,
 .edge-blur-right {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 120px;
+  width: 140px;
   z-index: 5;
   pointer-events: none;
 }
-
 .edge-blur-left {
   left: 0;
   background: linear-gradient(to right, hsl(225, 35%, 8%) 0%, transparent 100%);
 }
-
 .edge-blur-right {
   right: 0;
   background: linear-gradient(to left, hsl(225, 35%, 8%) 0%, transparent 100%);
 }
 
-/* ============================================
-   CENTER GRADIENT OVERLAY
-   ============================================ */
+/* ============ CENTER OVERLAY ============ */
 .center-gradient-overlay {
   background:
-    radial-gradient(ellipse 60% 50% at 50% 50%, hsla(225, 35%, 8%, 0.92) 0%, hsla(225, 35%, 8%, 0.7) 35%, transparent 70%),
-    radial-gradient(ellipse 80% 60% at 50% 50%, hsla(280, 50%, 20%, 0.25) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 35% at 50% 55%, hsla(36, 90%, 55%, 0.08) 0%, transparent 50%);
+    radial-gradient(ellipse 55% 45% at 50% 50%, hsla(225, 35%, 8%, 0.9) 0%, hsla(225, 35%, 8%, 0.6) 35%, transparent 70%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, hsla(280, 45%, 18%, 0.3) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 30% at 50% 55%, hsla(36, 90%, 55%, 0.06) 0%, transparent 50%);
 }
 
-/* ============================================
-   AVATAR CARDS
-   ============================================ */
+/* ============ AVATAR CARDS ============ */
 .avatar-card {
   border: var(--card-border-gold);
   border-radius: 1rem;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: glow-pulse 4s ease-in-out infinite;
-  box-shadow: 0 8px 25px hsla(225, 35%, 5%, 0.5);
+  position: relative;
+  animation: card-breathe 5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.3s);
+  will-change: transform;
 }
 
 .avatar-card:hover {
-  transform: scale(1.08) translateZ(20px);
-  box-shadow: var(--card-glow);
+  box-shadow: var(--card-glow) !important;
+  border-color: hsla(36, 90%, 55%, 0.6) !important;
 }
 
 .avatar-card img {
-  filter: brightness(0.9) saturate(1.1) sepia(0.08);
-  transition: filter 0.4s ease;
+  filter: brightness(0.95) saturate(1.15) contrast(1.05);
+  transition: filter 0.5s ease, transform 0.5s ease;
 }
 
 .avatar-card:hover img {
-  filter: brightness(1) saturate(1.2) sepia(0);
+  filter: brightness(1.1) saturate(1.3) contrast(1.1);
+  transform: scale(1.05);
 }
 
-/* ============================================
-   GOLD TEXT
-   ============================================ */
+/* Shine sweep overlay on card */
+.avatar-card-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    hsla(36, 90%, 70%, 0.12) 45%,
+    hsla(36, 90%, 70%, 0.06) 50%,
+    transparent 55%
+  );
+  animation: shine-sweep 6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.5s);
+  pointer-events: none;
+}
+
+/* ============ GOLD TEXT ============ */
 .gold-text {
   background: linear-gradient(
     90deg,
-    hsl(36, 90%, 55%),
+    hsl(36, 90%, 50%),
     hsl(45, 100%, 72%),
-    hsl(36, 90%, 55%),
-    hsl(45, 100%, 72%),
-    hsl(36, 90%, 55%)
+    hsl(40, 95%, 60%),
+    hsl(45, 100%, 75%),
+    hsl(36, 90%, 50%)
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gold-shine 4s linear infinite;
+  animation: gold-shine 3s linear infinite;
+  text-shadow: none;
 }
 
-/* ============================================
-   HERO BUTTONS
-   ============================================ */
+/* ============ HERO BUTTONS ============ */
 .hero-btn-primary {
-  padding: 14px 36px;
+  padding: 14px 38px;
   border-radius: 9999px;
   font-weight: 600;
   font-size: 0.95rem;
   font-family: var(--font-body);
   color: hsl(225, 35%, 8%);
-  background: linear-gradient(135deg, hsl(36, 90%, 55%), hsl(30, 95%, 50%));
-  box-shadow:
-    0 4px 20px hsla(36, 90%, 55%, 0.35),
-    inset 0 1px 0 hsla(45, 100%, 80%, 0.3);
+  background: linear-gradient(135deg, hsl(36, 90%, 55%), hsl(28, 95%, 48%));
+  box-shadow: 0 4px 20px hsla(36, 90%, 55%, 0.35), inset 0 1px 0 hsla(45, 100%, 80%, 0.3);
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
   animation: btn-glow 3s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, hsla(45, 100%, 90%, 0.3) 45%, transparent 55%);
+  animation: shine-sweep 4s ease-in-out infinite;
 }
 
 .hero-btn-primary:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow:
-    0 8px 30px hsla(36, 90%, 55%, 0.5),
-    inset 0 1px 0 hsla(45, 100%, 80%, 0.4);
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 10px 40px hsla(36, 90%, 55%, 0.5), inset 0 1px 0 hsla(45, 100%, 80%, 0.4);
 }
 
 .hero-btn-secondary {
-  padding: 14px 36px;
+  padding: 14px 38px;
   border-radius: 9999px;
   font-weight: 600;
   font-size: 0.95rem;
   font-family: var(--font-body);
-  color: hsl(36, 90%, 55%);
-  background: hsla(225, 35%, 12%, 0.8);
-  border: 1.5px solid hsla(36, 90%, 55%, 0.5);
+  color: hsl(36, 90%, 60%);
+  background: hsla(225, 35%, 10%, 0.7);
+  border: 1.5px solid hsla(36, 90%, 55%, 0.4);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(8px);
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  backdrop-filter: blur(12px);
 }
 
 .hero-btn-secondary:hover {
-  transform: translateY(-3px) scale(1.03);
-  background: hsla(36, 90%, 55%, 0.12);
-  border-color: hsl(36, 90%, 55%);
-  box-shadow: 0 4px 25px hsla(36, 90%, 55%, 0.25);
+  transform: translateY(-4px) scale(1.04);
+  background: hsla(36, 90%, 55%, 0.1);
+  border-color: hsla(36, 90%, 55%, 0.8);
+  box-shadow: 0 4px 30px hsla(36, 90%, 55%, 0.3), 0 0 60px hsla(36, 90%, 55%, 0.08);
+  color: hsl(36, 90%, 70%);
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+/* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
   .curve-top,
   .curve-bottom {
     transform: none;
   }
-
   .edge-blur-left,
   .edge-blur-right {
-    width: 60px;
+    width: 50px;
   }
-
   .center-gradient-overlay {
     background:
-      radial-gradient(ellipse 80% 50% at 50% 50%, hsla(225, 35%, 8%, 0.95) 0%, hsla(225, 35%, 8%, 0.8) 40%, transparent 75%);
+      radial-gradient(ellipse 85% 50% at 50% 50%, hsla(225, 35%, 8%, 0.95) 0%, hsla(225, 35%, 8%, 0.8) 40%, transparent 80%);
   }
-
   .hero-btn-primary,
   .hero-btn-secondary {
     width: 100%;
@@ -306,9 +299,9 @@
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .curve-top {
-    transform: perspective(800px) rotateX(3deg);
+    transform: perspective(800px) rotateX(4deg);
   }
   .curve-bottom {
-    transform: perspective(800px) rotateX(-3deg);
+    transform: perspective(800px) rotateX(-4deg);
   }
 }
