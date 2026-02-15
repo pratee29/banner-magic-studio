@@ -10,10 +10,15 @@ interface AvatarRowProps {
   direction?: "left" | "right";
   speed?: number;
   offset?: number;
+  cardSize?: { width: string; height: string };
 }
 
-const AvatarRow = ({ direction = "left", speed = 30, offset = 0 }: AvatarRowProps) => {
-  // Double the array for seamless loop
+const AvatarRow = ({
+  direction = "left",
+  speed = 30,
+  offset = 0,
+  cardSize = { width: "160px", height: "190px" },
+}: AvatarRowProps) => {
   const doubled = [...avatars, ...avatars, ...avatars, ...avatars];
 
   return (
@@ -33,13 +38,13 @@ const AvatarRow = ({ direction = "left", speed = 30, offset = 0 }: AvatarRowProp
             key={i}
             className="avatar-card flex-shrink-0"
             style={{
-              width: "160px",
-              height: "180px",
+              width: cardSize.width,
+              height: cardSize.height,
             }}
           >
             <img
               src={src}
-              alt={`Student avatar ${(i % avatars.length) + 1}`}
+              alt={`Avatar ${(i % avatars.length) + 1}`}
               className="w-full h-full object-cover"
               loading="lazy"
             />
