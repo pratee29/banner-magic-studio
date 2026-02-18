@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, Plus } from "lucide-react";
+import { Users, Plus, Radio } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import CreateLiveSessionModal from "./CreateLiveSessionModal";
@@ -19,6 +19,7 @@ const liveRooms = [
     users: 124,
     mode: "Discussion",
     gradient: "from-[#E6B800] via-[#E89A3C] to-[#D66B6B]",
+    bg: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format",
   },
   {
     title: "UI Design",
@@ -27,6 +28,7 @@ const liveRooms = [
     users: 89,
     mode: "Learning",
     gradient: "from-[#7F00FF] via-[#9F44FF] to-[#C77DFF]",
+    bg: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&auto=format",
   },
   {
     title: "Public",
@@ -35,6 +37,7 @@ const liveRooms = [
     users: 156,
     mode: "Practice",
     gradient: "from-[#FF512F] via-[#F09819] to-[#FFD200]",
+    bg: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&auto=format",
   },
   {
     title: "Android Dev",
@@ -42,22 +45,10 @@ const liveRooms = [
     host: "David Kim",
     users: 98,
     mode: "Observe",
-    gradient: "from-[#FF512F] via-[#F09819] to-[#FFD200]",
+    gradient: "from-[#11998e] via-[#38ef7d] to-[#11998e]",
+    bg: "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=800&auto=format",
   },
 ];
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, rotateX: 15 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-    },
-  }),
-};
 
 export default function LiveNow({ userRole }: { userRole?: string }) {
   const [showCreate, setShowCreate] = useState(false);
@@ -73,128 +64,137 @@ export default function LiveNow({ userRole }: { userRole?: string }) {
 
   return (
     <>
-    <CreateLiveSessionModal open={showCreate} onClose={() => setShowCreate(false)} />
-    <section className="py-24 bg-[#070B24] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 relative">
+      <CreateLiveSessionModal open={showCreate} onClose={() => setShowCreate(false)} />
+      <section className="py-24 bg-[#070B24] overflow-hidden relative">
 
-        {/* HEADER
-        <div className="flex items-start justify-between mb-16">
-          <div>
-            <span className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-[#2A1410] border border-orange-400/30 text-orange-400 font-semibold">
-              🔴 LIVE NOW 
-            </span>
+        {/* BG GLOW BLOBS */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-red-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-            <p className="text-white/70 mt-6 text-lg">
-              People talking. Ideas flowing. No scripts.
-            </p>
-          </div>
+        {/* FLOATING DOTS */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1.5 h-1.5 rounded-full bg-orange-400/40"
+            style={{ left: `${15 + i * 14}%`, top: `${20 + (i % 3) * 25}%` }}
+            animate={{ y: [0, -18, 0], opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 3 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
+          />
+        ))}
 
-          <button className="px-7 py-2.5 rounded-full bg-orange-500 text-black font-medium hover:bg-orange-400 transition">
-            View all
-          </button>
-        </div> */}
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <motion.div
+            className="flex items-center justify-between mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <motion.div
+                  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="w-3 h-3 bg-red-500 rounded-full"
+                />
+                <h2 className="text-4xl font-bold text-white">
+                  Live <span className="text-orange-400">Now</span>
+                </h2>
+              </div>
+              <p className="text-white/60 text-lg">People talking. Ideas flowing. No scripts.</p>
+            </div>
 
+            <div className="flex items-center gap-3">
+              {userRole && (
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(249,115,22,0.4)" }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleCreate}
+                  className="px-5 py-2 rounded-full bg-gradient-to-r from-orange-400 to-pink-500 text-white font-semibold flex items-center gap-2 transition"
+                >
+                  <Plus size={18} /> {userRole === 'CREATE' ? 'Create Live Session' : '🔒 Create (Upgrade)'}
+                </motion.button>
+              )}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                onClick={() => navigate('/live-sessions')}
+                className="px-6 py-2 rounded-full bg-orange-500 text-black font-semibold hover:bg-orange-400 transition"
+              >
+                View all
+              </motion.button>
+            </div>
+          </motion.div>
 
-         <div className="flex items-center justify-between mb-12">
-          <div>
-            <h2 className="text-4xl font-bold text-white">
-             🔴 Live <span className="text-orange-400">Now</span>
-            </h2>
-            <p className="text-white/60 mt-2">
-              People talking. Ideas flowing. No scripts.
-            </p>
-          </div>
+          {/* CAROUSEL */}
+          <Carousel opts={{ align: "start", loop: true }}>
+            <CarouselContent>
+              {liveRooms.map((room, i) => (
+                <CarouselItem key={i} className="basis-full sm:basis-1/2 lg:basis-1/3 flex justify-center">
+                  <div className="w-full max-w-[380px]">
+                    <motion.div
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: i * 0.12 }}
+                      whileHover={{ y: -8, scale: 1.02 }}
+                      className="relative group cursor-pointer rounded-3xl overflow-hidden"
+                      style={{ height: "200px" }}
+                    >
+                      {/* BG IMAGE */}
+                      <img
+                        src={room.bg}
+                        alt={room.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      {/* GRADIENT OVER IMAGE */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${room.gradient} opacity-75`} />
+                      <div className="absolute inset-0 bg-black/30" />
 
-          <div className="flex items-center gap-3">
-            {userRole && (
-              <button onClick={handleCreate} className="px-5 py-2 rounded-full bg-gradient-to-r from-orange-400 to-pink-500 text-white font-semibold flex items-center gap-2 hover:opacity-90 transition">
-                <Plus size={18} /> {userRole === 'CREATE' ? 'Create Live Session' : '🔒 Create (Upgrade)'}
-              </button>
-            )}
-            <button onClick={() => navigate('/live-sessions')} className="px-6 py-2 rounded-full bg-orange-500 text-black font-semibold hover:bg-orange-400 transition">
-              View all
-            </button>
-          </div>
-        </div>
+                      {/* CONTENT */}
+                      <div className="relative z-10 h-full flex flex-col justify-between p-5">
+                        <div className="flex items-center justify-between">
+                          <motion.span
+                            animate={{ scale: [1, 1.05, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="flex items-center gap-1.5 text-xs bg-black/40 backdrop-blur-sm px-3 py-1 rounded-full text-white font-semibold"
+                          >
+                            <motion.span
+                              animate={{ opacity: [1, 0.3, 1] }}
+                              transition={{ duration: 1.2, repeat: Infinity }}
+                              className="w-2 h-2 bg-yellow-300 rounded-full"
+                            />
+                            LIVE
+                          </motion.span>
+                          <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium">
+                            {room.mode}
+                          </span>
+                        </div>
 
-        {/* CAROUSEL */}
-        <Carousel opts={{ align: "start", loop: true }}>
-          <CarouselContent className="">
-            {liveRooms.map((room, i) => (
-              <CarouselItem key={i} className="basis-full sm:basis-1/2 lg:basis-1/3 flex justify-center">
-                <div className="w-full max-w-[360px] flex justify-center">
-                  <motion.div
-                    custom={i}
-                    variants={cardVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
-                    className="w-full"
-                  >
-                    <div
-                      className={`h-20 sm:h-24 rounded-full px-3 sm:px-5
-                      bg-gradient-to-r ${room.gradient}
-                      flex items-center justify-between
-                      shadow-lg hover:shadow-2xl
-                      transition-all duration-300
-                      transform hover:scale-105
-                      cursor-pointer gap-2`}
-                    style={{
-                      perspective: "1000px",
-                      transformStyle: "preserve-3d",
-                    }}
-                  >
-                    {/* LEFT */}
-                    <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                      {/* LIVE */}
-                      <motion.span
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="flex items-center gap-1 text-xs bg-black/30 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-white font-medium whitespace-nowrap text-[11px] sm:text-xs"
-                      >
-                        <motion.span
-                          animate={{ opacity: [1, 0.5, 1] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                          className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-yellow-300 rounded-full"
-                        />
-                        LIVE
-                      </motion.span>
+                        <div>
+                          <h3 className="text-white text-3xl font-bold leading-tight">{room.title}</h3>
+                          <p className="text-white/80 text-sm mt-1">{room.subtitle}</p>
+                        </div>
 
-                      {/* TITLE & SUBTITLE */}
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-white text-sm sm:text-2xl font-bold leading-tight truncate">
-                          {room.title}
-                        </h3>
-                        <p className="text-white/80 text-xs leading-tight truncate">
-                          {room.subtitle}
-                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-white/80 text-sm">by {room.host}</span>
+                          <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
+                            <Users size={14} /> {room.users}
+                          </span>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* RIGHT */}
-                    <div className="flex items-center gap-1.5 sm:gap-2 ml-1 flex-shrink-0">
-                      <span className="flex items-center gap-0.5 sm:gap-1 bg-[#6B4A2D] text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium whitespace-nowrap">
-                        <Users size={10} className="sm:w-3 sm:h-3" />
-                        <span className="hidden sm:inline">{room.users}</span>
-                        <span className="sm:hidden text-[10px]">{room.users}</span>
-                      </span>
-
-                      <span className="bg-orange-400/90 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium whitespace-nowrap">
-                        {room.mode}
-                      </span>
-                    </div>
-                    </div>
-                  </motion.div>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-
-          <CarouselPrevious className="-left-6 sm:-left-10 bg-orange-500 text-black hover:opacity-90 border-0" />
-          <CarouselNext className="-right-6 sm:-right-10 bg-orange-500 text-black hover:opacity-90 border-0" />
-        </Carousel>
-      </div>
-    </section>
+                      {/* HOVER GLOW RING */}
+                      <div className="absolute inset-0 rounded-3xl ring-1 ring-white/10 group-hover:ring-orange-400/50 transition-all duration-500" />
+                    </motion.div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-6 sm:-left-10 bg-orange-500 text-black hover:opacity-90 border-0" />
+            <CarouselNext className="-right-6 sm:-right-10 bg-orange-500 text-black hover:opacity-90 border-0" />
+          </Carousel>
+        </div>
+      </section>
     </>
   );
 }

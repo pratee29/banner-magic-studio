@@ -43,20 +43,22 @@ const AvatarCard = ({
   return (
     <motion.div
       ref={cardRef}
-      className="avatar-card flex-shrink-0"
+      className="avatar-card flex-shrink-0 relative overflow-hidden rounded-2xl"
       style={{
         width: cardSize.width,
         height: cardSize.height,
         transform: `perspective(600px) rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
         transition: "transform 0.2s ease-out",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)",
       }}
-      initial={{ opacity: 0, scale: 0.8, y: 30 }}
+      initial={{ opacity: 0, scale: 0.75, y: 40 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{
-        duration: 0.6,
-        delay: (index * 0.08) + (rowIndex * 0.15),
+        duration: 0.7,
+        delay: (index * 0.06) + (rowIndex * 0.12),
         ease: [0.23, 1, 0.32, 1],
       }}
+      whileHover={{ scale: 1.06, zIndex: 20 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -66,7 +68,12 @@ const AvatarCard = ({
         className="w-full h-full object-cover"
         loading="lazy"
       />
+      {/* WARM TINT */}
+      <div className="absolute inset-0 bg-gradient-to-t from-orange-900/40 via-transparent to-transparent" />
+      {/* SHINE */}
       <div className="avatar-card-shine" />
+      {/* BORDER GLOW */}
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-white/10 group-hover:ring-orange-400/50 transition-all" />
     </motion.div>
   );
 };
