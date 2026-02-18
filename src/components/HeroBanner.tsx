@@ -1,6 +1,5 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import AvatarRow from "./AvatarRow";
 
 const textReveal = {
@@ -18,7 +17,6 @@ const textReveal = {
 };
 
 const HeroBanner = () => {
-  const navigate = useNavigate();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
@@ -34,10 +32,29 @@ const HeroBanner = () => {
   }, [mouseX, mouseY]);
 
   return (
-    <section className="relative w-full overflow-hidden bg-background pt-32 pb-20">
-      
+    <section className="relative min-h-screen overflow-hidden bg-background">
+      {/* Navbar */}
+      <nav className="relative z-40 flex items-center justify-between px-6 py-4 md:px-12">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-lg">L</span>
+          </div>
+          <span className="text-foreground font-semibold text-xl tracking-wide font-body">
+            Lyfex
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="px-5 py-2 rounded-full bg-primary text-primary-foreground font-medium text-sm hover:brightness-110 transition-all">
+            Register
+          </button>
+          <button className="px-5 py-2 rounded-full border border-primary text-primary font-medium text-sm hover:bg-primary hover:text-primary-foreground transition-all">
+            Login
+          </button>
+        </div>
+      </nav>
+
       {/* THREE LAYER BANNER */}
-      <div className="relative" style={{ minHeight: "70vh" }}>
+      <div className="relative" style={{ minHeight: "calc(100vh - 72px)" }}>
 
         {/* LAYER 1 – TOP */}
         <motion.div
@@ -115,9 +132,9 @@ const HeroBanner = () => {
             variants={textReveal}
             initial="hidden"
             animate="visible"
-            className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-1 font-display drop-shadow-[0_0_30px_hsla(36,90%,55%,0.15)]"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-1 font-display drop-shadow-[0_0_30px_hsla(36,90%,55%,0.15)]"
           >
-            Tired of One Way Gyaan?
+            Welcome to Your
           </motion.h1>
 
           <motion.h2
@@ -125,10 +142,10 @@ const HeroBanner = () => {
             variants={textReveal}
             initial="hidden"
             animate="visible"
-            className="text-3xl md:text-5xl lg:text-6xl font-bold italic gold-text mb-3 font-display"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold italic gold-text mb-3 font-display"
           >
-            Welcome to Your Online Adda{" "}
-            <span className="animate-sparkle inline-block text-2xl md:text-4xl">✨</span>
+            Online Space{" "}
+            <span className="animate-sparkle inline-block text-3xl md:text-5xl">✨</span>
           </motion.h2>
 
           <motion.p
@@ -136,9 +153,9 @@ const HeroBanner = () => {
             variants={textReveal}
             initial="hidden"
             animate="visible"
-            className="text-sm md:text-base text-muted-foreground italic tracking-[0.3em] mb-10 font-display"
+            className="text-base md:text-lg text-muted-foreground italic tracking-[0.3em] mb-10 font-display"
           >
-            Let's Talk & Learn
+            Observe &nbsp; Learn &nbsp; Discuss &nbsp; Support &nbsp; Pause
           </motion.p>
 
           <motion.div
@@ -148,8 +165,11 @@ const HeroBanner = () => {
             animate="visible"
             className="flex flex-col sm:flex-row gap-4 pointer-events-auto"
           >
-            <button onClick={() => navigate("/discuss")} className="hero-btn-primary">
-              Join Group Discussion
+            <button className="hero-btn-primary">
+              Start a Discussion
+            </button>
+            <button className="hero-btn-secondary">
+              Explore Now
             </button>
           </motion.div>
         </div>
